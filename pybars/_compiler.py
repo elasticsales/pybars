@@ -369,8 +369,9 @@ _pybars_ = {
 class CodeBuilder:
     """Builds code for a template."""
 
-    def __init__(self):
+    def __init__(self, escape_html=True):
         self.stack = []
+        self.escape_html = escape_html
 
     def start(self):
         self.stack.append((strlist(), {}))
@@ -496,6 +497,9 @@ class CodeBuilder:
         self._result.grow(u"    if value is None: value = ''\n")
 
     def add_escaped_expand(self, path_type_path, arguments):
+        if not self.escape_html:
+            return self.add_expand(path_type_path, arguments)
+
         (path_type, path) = path_type_path
         call = self.arguments_to_call(arguments)
         self.find_lookup(path, path_type, call)
@@ -575,13 +579,15 @@ class Compiler:
     """
 
     _handlebars = OMeta.makeGrammar(handlebars_grammar, {}, 'handlebars')
-    _builder = CodeBuilder()
+    _builder = CodeBuilder(escape_html=False)
+    _builder_html = CodeBuilder()
     _compiler = OMeta.makeGrammar(compile_grammar, {'builder': _builder})
+    _compiler_html = OMeta.makeGrammar(compile_grammar, {'builder': _builder_html})
 
     def __init__(self):
         self._helpers = {}
 
-    def compile(self, source):
+    def compile(self, source, escape_html=True):
         """Compile source to a ready to run template.
 
         :param source: The template to compile - should be a unicode string.
@@ -589,11 +595,11 @@ class Compiler:
         """
         assert isinstance(source, str_class)
         tree = self._handlebars(source).apply('template')[0]
-        # print source
-        # print '-->'
-        # print "T", tree
-        code = self._compiler(tree).apply('compile')[0]
-        # print code
+        if escape_html:
+            compiler = self._compiler_html
+        else:
+            compiler = self._compiler
+        code = compiler(tree).apply('compile')[0]
         return code
 
 #orig = Compiler._handlebars.rule_blockrule
