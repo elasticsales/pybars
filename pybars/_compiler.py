@@ -259,7 +259,10 @@ def resolve(context, *segments):
         if segment in (None, ""):
             continue
         if type(context) in (list, tuple):
-            offset = int(segment)
+            try:
+                offset = int(segment)
+            except ValueError:
+                return None
             context = context[offset]
         elif isinstance(context, Scope):
             try:
