@@ -184,6 +184,7 @@ def pick(context, name, default=None):
         try:
             exists = hasattr(context, name)
         except UnicodeEncodeError:
+            # Python 2 raises UnicodeEncodeError on non-ASCII strings
             pass
         else:
             if exists:
