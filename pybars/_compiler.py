@@ -446,9 +446,9 @@ class CodeBuilder:
                 u"    options['inverse'] = lambda this: None\n"
                 ])
         self._result.grow([
-            u"    value = helper = helpers.get('%s')\n" % symbol,
+            u"    value = helper = helpers.get(u'%s')\n" % symbol,
             u"    if value is None:\n"
-            u"        value = context.get('%s')\n" % symbol,
+            u"        value = context.get(u'%s')\n" % symbol,
             u"    if helper and callable(helper):\n"
             u"        this = Scope(context, context, root)\n"
             u"        value = value(this, options, %s\n" % call,
@@ -535,7 +535,7 @@ class CodeBuilder:
         # This may need to be a blockHelperMissing clal as well.
         name = self.allocate_value(nested)
         self._result.grow([
-            u"    value = context.get('%s')\n" % symbol,
+            u"    value = context.get(u'%s')\n" % symbol,
             u"    if not value:\n"
             u"    "])
         self._invoke_template(name, "context")
@@ -575,7 +575,7 @@ class CodeBuilder:
         self._result.grow([u"    overrides = %s\n" % overrides_literal])
 
         self._result.grow([
-            u"    inner = partials['%s']\n" % symbol,
+            u"    inner = partials[u'%s']\n" % symbol,
             u"    scope = Scope(%s, context, root, overrides=overrides)\n" % self._lookup_arg(arg)])
         self._invoke_template("inner", "scope")
 
