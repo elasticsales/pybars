@@ -949,3 +949,7 @@ class TestAcceptance(TestCase):
     def test_invalid_template_2(self):
         source = u'{{ foo 0x="bar" }}'
         self.assertEqual('', render(source, {}))
+
+    def test_unicode(self):
+        source = u'{{[\xe4]}}'
+        self.assertEqual('foo', render(source, {u'\xe4': 'foo'}))

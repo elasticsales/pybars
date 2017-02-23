@@ -180,8 +180,14 @@ def escape(something, _escape_re=_escape_re, substitute=substitute):
 
 
 def pick(context, name, default=None):
-    if isinstance(name, str) and hasattr(context, name):
-        return getattr(context, name)
+    if isinstance(name, basestring):
+        try:
+            exists = hasattr(context, name)
+        except UnicodeEncodeError:
+            pass
+        else:
+            if exists:
+                return getattr(context, name)
     if hasattr(context, 'get'):
         return context.get(name)
     try:
@@ -473,14 +479,14 @@ class CodeBuilder:
             # XXX: just rm.
             realname = path.replace('.get("', '').replace('")', '')
             self._result.grow([
-                u"    value = helpers.get('%s')\n" % realname,
+                u"    value = helpers.get(u'%s')\n" % realname,
                 u"    if value is None:\n"
-                u"        value = resolve(context, '%s')\n" % path,
+                u"        value = resolve(context, u'%s')\n" % path,
                 ])
         elif path_type == "simple":
             realname = None
             self._result.grow([
-                u"    value = resolve(context, '%s')\n" % path,
+                u"    value = resolve(context, u'%s')\n" % path,
                 ])
         else:
             realname = None
@@ -494,7 +500,7 @@ class CodeBuilder:
             self._result.grow(
                 u"    elif value is None:\n"
                 u"        this = Scope(context, context, root)\n"
-                u"        value = helpers.get('helperMissing')(this, '%s', %s\n"
+                u"        value = helpers.get('helperMissing')(this, u'%s', %s\n"
                     % (realname, call)
                 )
         self._result.grow(u"    if value is None: value = ''\n")
