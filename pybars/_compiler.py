@@ -179,6 +179,12 @@ def escape(something, _escape_re=_escape_re, substitute=substitute):
     return _escape_re.sub(substitute, something)
 
 
+try:
+    basestring
+except NameError:
+    basestring = str
+
+
 def pick(context, name, default=None):
     if isinstance(name, basestring):
         try:
