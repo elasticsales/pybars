@@ -121,8 +121,8 @@ escapedexpand ::= [ "escapedexpand" <path>:value [<arg>*:arguments]] => builder.
 invertedblock ::= [ "invertedblock" <anything>:symbol [<arg>*:arguments] [<compile>:t] ] => builder.add_invertedblock(symbol, arguments, t)
 partial ::= ["partial" <anything>:symbol [<arg>*:arguments]] => builder.add_partial(symbol, arguments)
 path ::= [ "path" [<pathseg>:segment]] => ("simple", segment)
- | [ "path" [<pathseg>+:segments] ] => ("complex", u'resolve(context, "'  + u'","'.join(segments) + u'")' )
-simplearg ::= [ "path" [<pathseg>+:segments] ] => u'resolve(context, "'  + u'","'.join(segments) + u'")'
+ | [ "path" [<pathseg>+:segments] ] => ("complex", u'resolve(context, u"'  + u'",u"'.join(segments) + u'")' )
+simplearg ::= [ "path" [<pathseg>+:segments] ] => u'resolve(context, u"'  + u'",u"'.join(segments) + u'")'
     | [ "literalparam" <anything>:value ] => {str_class}(value)
 arg ::= [ "kwparam" <anything>:symbol <simplearg>:a ] => {str_class}(symbol) + '=' + a
     | <simplearg>
