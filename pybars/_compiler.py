@@ -276,7 +276,10 @@ def resolve(context, *segments):
                 offset = int(segment)
             except ValueError:
                 return None
-            context = context[offset]
+            try:
+                context = context[offset]
+            except IndexError:
+                return None
         elif isinstance(context, Scope):
             try:
                 context = context.get(segment)

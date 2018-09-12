@@ -93,3 +93,9 @@ class TestCompiler(TestCase):
         self.assertEqual(u"""hello""",
             render(u"""{{foo.[bar baz]}}""",
                 {'foo': {'bar baz': 'hello' }}))
+
+    def test_list_index_error(self):
+        self.assertEqual(
+            'nothing: ',
+            render(u'nothing: {{foo.1.bar}}', {'foo': []})
+        )
