@@ -253,11 +253,11 @@ def pick(context, name, default=None):
                 if exists:
                     value = getattr(context, name)
                     log_attr_access(context, name, value)
-                    return value
+                    return default
         if hasattr(context, 'get'):
             value = context.get(name)
             log_attr_access(context, name, value)
-            return value
+            return default
         return default
 
 

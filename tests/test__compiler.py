@@ -122,8 +122,10 @@ class TestCompiler(TestCase):
             u"{{#if ['));exit(1);((']}}{{/if}}",
             u"{{['+exit(1)+']}}",
             u"{{[');exit(1)#]}}",
+            u"{{foo.print}}",
+            u"{{#if foo.print}}{{foo.print}}{{/if}}",
         ]:
-            render(template, {})
+            render(template, {"foo": "bar"})
 
         try:
             render(u"{{> ([log\", \"\", \"\");exit(1)#])}}", {})
