@@ -35,10 +35,15 @@ __all__ = [
 __metaclass__ = type
 
 
-def log_attr_access(name):
+def log_attr_access(context, name, value):
+    if value is None:
+        return
+
     print(
-        '[pybars_attr_access] Attribute {} accessed in template'.format(
-            repr(str_class(name))
+        '[pybars_attr_access] Attribute {} with value {} accessed in context {}'.format(
+            repr(str_class(name)),
+            repr(str_class(value)),
+            repr(str_class(context))
         ),
         file=sys.stderr
     )
@@ -246,11 +251,13 @@ def pick(context, name, default=None):
                 pass
             else:
                 if exists:
-                    log_attr_access(name)
-                    return getattr(context, name)
+                    value = getattr(context, name)
+                    log_attr_access(context, name, value)
+                    return value
         if hasattr(context, 'get'):
-            log_attr_access(name)
-            return context.get(name)
+            value = context.get(name)
+            log_attr_access(context, name, value)
+            return value
         return default
 
 
