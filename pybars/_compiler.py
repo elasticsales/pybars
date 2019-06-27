@@ -16,6 +16,7 @@
 
 """The compiler for pybars."""
 
+from __future__ import print_function
 import re
 import sys
 from types import ModuleType
@@ -32,6 +33,15 @@ __all__ = [
     ]
 
 __metaclass__ = type
+
+
+def log_attr_access(name):
+    print(
+        '[pybars_attr_access] Attribute {} accessed in template'.format(
+            repr(str_class(name))
+        ),
+        file=sys.stderr
+    )
 
 
 # This allows the code to run on Python 2 and 3 by
@@ -236,8 +246,10 @@ def pick(context, name, default=None):
                 pass
             else:
                 if exists:
+                    log_attr_access(name)
                     return getattr(context, name)
         if hasattr(context, 'get'):
+            log_attr_access(name)
             return context.get(name)
         return default
 
