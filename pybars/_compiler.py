@@ -203,12 +203,12 @@ class strlist(list):
 
     def grow(self, thing):
         """Make the list longer, appending for unicode, extending otherwise."""
-        if type(thing) == str_class:
+        if isinstance(thing, str_class):
             self.append(thing)
 
         # This will only ever match in Python 2 since str_class is str in
         # Python 3.
-        elif type(thing) == str:
+        elif isinstance(thing, str):
             self.append(unicode(thing))  # noqa: F821 undefined name 'unicode'
 
         else:
